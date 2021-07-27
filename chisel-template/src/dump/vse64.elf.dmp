@@ -1,0 +1,150 @@
+
+vse64:     file format elf32-littleriscv
+
+
+Disassembly of section .text.startup:
+
+00000000 <main>:
+   0:	f6010113          	addi	sp,sp,-160
+   4:	12000793          	li	a5,288
+   8:	0147a383          	lw	t2,20(a5)
+   c:	0187a283          	lw	t0,24(a5)
+  10:	08812e23          	sw	s0,156(sp)
+  14:	08912c23          	sw	s1,152(sp)
+  18:	0107a403          	lw	s0,16(a5)
+  1c:	00c7a483          	lw	s1,12(a5)
+  20:	09212a23          	sw	s2,148(sp)
+  24:	09312823          	sw	s3,144(sp)
+  28:	0087a903          	lw	s2,8(a5)
+  2c:	0047a983          	lw	s3,4(a5)
+  30:	09412623          	sw	s4,140(sp)
+  34:	0007aa03          	lw	s4,0(a5)
+  38:	02c7a683          	lw	a3,44(a5)
+  3c:	0447a583          	lw	a1,68(a5)
+  40:	0487a603          	lw	a2,72(a5)
+  44:	04c7a703          	lw	a4,76(a5)
+  48:	0207af03          	lw	t5,32(a5)
+  4c:	0247ae83          	lw	t4,36(a5)
+  50:	0287ae03          	lw	t3,40(a5)
+  54:	0347a303          	lw	t1,52(a5)
+  58:	0387a883          	lw	a7,56(a5)
+  5c:	03c7a803          	lw	a6,60(a5)
+  60:	0407a503          	lw	a0,64(a5)
+  64:	01c7af83          	lw	t6,28(a5)
+  68:	0307a783          	lw	a5,48(a5)
+  6c:	01412423          	sw	s4,8(sp)
+  70:	01312623          	sw	s3,12(sp)
+  74:	01212823          	sw	s2,16(sp)
+  78:	00912a23          	sw	s1,20(sp)
+  7c:	00812c23          	sw	s0,24(sp)
+  80:	00712e23          	sw	t2,28(sp)
+  84:	02512023          	sw	t0,32(sp)
+  88:	03f12223          	sw	t6,36(sp)
+  8c:	02d12a23          	sw	a3,52(sp)
+  90:	04b12623          	sw	a1,76(sp)
+  94:	04c12823          	sw	a2,80(sp)
+  98:	04e12a23          	sw	a4,84(sp)
+  9c:	03e12423          	sw	t5,40(sp)
+  a0:	03d12623          	sw	t4,44(sp)
+  a4:	03c12823          	sw	t3,48(sp)
+  a8:	02f12c23          	sw	a5,56(sp)
+  ac:	00500693          	li	a3,5
+  b0:	02612e23          	sw	t1,60(sp)
+  b4:	05112023          	sw	a7,64(sp)
+  b8:	05012223          	sw	a6,68(sp)
+  bc:	04a12423          	sw	a0,72(sp)
+  c0:	00810593          	addi	a1,sp,8
+  c4:	03010613          	addi	a2,sp,48
+  c8:	05810713          	addi	a4,sp,88
+  cc:	00c6f7d7          	vsetvli	a5,a3,e64,m1,tu,mu,d1
+  d0:	40f686b3          	sub	a3,a3,a5
+  d4:	0205f087          	vle64.v	v1,(a1)
+  d8:	00379793          	slli	a5,a5,0x3
+  dc:	00f585b3          	add	a1,a1,a5
+  e0:	02067107          	vle64.v	v2,(a2)
+  e4:	00f60633          	add	a2,a2,a5
+  e8:	022081d7          	vadd.vv	v3,v2,v1
+  ec:	020771a7          	vse64.v	v3,(a4)
+  f0:	02077207          	vle64.v	v4,(a4)
+  f4:	00f70733          	add	a4,a4,a5
+  f8:	fc069ae3          	bnez	a3,cc <main+0xcc>
+  fc:	c0001073          	unimp
+ 100:	09c12403          	lw	s0,156(sp)
+ 104:	09812483          	lw	s1,152(sp)
+ 108:	09412903          	lw	s2,148(sp)
+ 10c:	09012983          	lw	s3,144(sp)
+ 110:	08c12a03          	lw	s4,140(sp)
+ 114:	00000513          	li	a0,0
+ 118:	0a010113          	addi	sp,sp,160
+ 11c:	00008067          	ret
+
+Disassembly of section .rodata:
+
+00000120 <.rodata>:
+ 120:	1111                	addi	sp,sp,-28
+ 122:	1111                	addi	sp,sp,-28
+ 124:	1111                	addi	sp,sp,-28
+ 126:	1111                	addi	sp,sp,-28
+ 128:	2222                	fld	ft4,8(sp)
+ 12a:	2222                	fld	ft4,8(sp)
+ 12c:	2222                	fld	ft4,8(sp)
+ 12e:	2222                	fld	ft4,8(sp)
+ 130:	33333333          	0x33333333
+ 134:	33333333          	0x33333333
+ 138:	4444                	lw	s1,12(s0)
+ 13a:	4444                	lw	s1,12(s0)
+ 13c:	4444                	lw	s1,12(s0)
+ 13e:	4444                	lw	s1,12(s0)
+ 140:	5555                	li	a0,-11
+ 142:	5555                	li	a0,-11
+ 144:	5555                	li	a0,-11
+ 146:	5555                	li	a0,-11
+ 148:	bbbbbbbb          	0xbbbbbbbb
+ 14c:	bbbbbbbb          	0xbbbbbbbb
+ 150:	cccc                	sw	a1,28(s1)
+ 152:	cccc                	sw	a1,28(s1)
+ 154:	cccc                	sw	a1,28(s1)
+ 156:	cccc                	sw	a1,28(s1)
+ 158:	dddd                	beqz	a1,116 <main+0x116>
+ 15a:	dddd                	beqz	a1,118 <main+0x118>
+ 15c:	dddd                	beqz	a1,11a <main+0x11a>
+ 15e:	dddd                	beqz	a1,11c <main+0x11c>
+ 160:	eeee                	fsw	fs11,92(sp)
+ 162:	eeee                	fsw	fs11,92(sp)
+ 164:	eeee                	fsw	fs11,92(sp)
+ 166:	eeee                	fsw	fs11,92(sp)
+ 168:	ffff                	0xffff
+ 16a:	ffff                	0xffff
+ 16c:	ffff                	0xffff
+ 16e:	ffff                	0xffff
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3920                	fld	fs0,112(a0)
+   c:	322e                	fld	ft4,232(sp)
+   e:	302e                	fld	ft0,232(sp)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	2041                	jal	80 <main+0x80>
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <main+0x14>
+   c:	0016                	c.slli	zero,0x5
+   e:	0000                	unimp
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	5f30                	lw	a2,120(a4)
+  1c:	3276                	fld	ft4,376(sp)
+  1e:	3070                	fld	fa2,224(s0)
+	...

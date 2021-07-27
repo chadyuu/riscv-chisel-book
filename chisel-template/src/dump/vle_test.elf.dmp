@@ -1,0 +1,119 @@
+
+vle_test:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	fb010113          	addi	sp,sp,-80
+   4:	04812623          	sw	s0,76(sp)
+   8:	05010413          	addi	s0,sp,80
+   c:	00500793          	li	a5,5
+  10:	fef42623          	sw	a5,-20(s0)
+  14:	0e400793          	li	a5,228
+  18:	0007a583          	lw	a1,0(a5)
+  1c:	0047a603          	lw	a2,4(a5)
+  20:	0087a683          	lw	a3,8(a5)
+  24:	00c7a703          	lw	a4,12(a5)
+  28:	0107a783          	lw	a5,16(a5)
+  2c:	fcb42823          	sw	a1,-48(s0)
+  30:	fcc42a23          	sw	a2,-44(s0)
+  34:	fcd42c23          	sw	a3,-40(s0)
+  38:	fce42e23          	sw	a4,-36(s0)
+  3c:	fef42023          	sw	a5,-32(s0)
+  40:	fd040793          	addi	a5,s0,-48
+  44:	fef42423          	sw	a5,-24(s0)
+  48:	0f800793          	li	a5,248
+  4c:	0007a583          	lw	a1,0(a5)
+  50:	0047a603          	lw	a2,4(a5)
+  54:	0087a683          	lw	a3,8(a5)
+  58:	00c7a703          	lw	a4,12(a5)
+  5c:	0107a783          	lw	a5,16(a5)
+  60:	fab42e23          	sw	a1,-68(s0)
+  64:	fcc42023          	sw	a2,-64(s0)
+  68:	fcd42223          	sw	a3,-60(s0)
+  6c:	fce42423          	sw	a4,-56(s0)
+  70:	fcf42623          	sw	a5,-52(s0)
+  74:	fbc40793          	addi	a5,s0,-68
+  78:	fef42223          	sw	a5,-28(s0)
+
+0000007c <loop>:
+  7c:	fec42783          	lw	a5,-20(s0)
+  80:	0087f2d7          	vsetvli	t0,a5,e32,m1,tu,mu,d1
+  84:	fec42783          	lw	a5,-20(s0)
+  88:	405787b3          	sub	a5,a5,t0
+  8c:	fef42623          	sw	a5,-20(s0)
+  90:	00229293          	slli	t0,t0,0x2
+  94:	fe842783          	lw	a5,-24(s0)
+  98:	0207e087          	vle32.v	v1,(a5)
+  9c:	fe842783          	lw	a5,-24(s0)
+  a0:	0207f087          	vle64.v	v1,(a5)
+  a4:	fe842783          	lw	a5,-24(s0)
+  a8:	005787b3          	add	a5,a5,t0
+  ac:	fef42423          	sw	a5,-24(s0)
+  b0:	fe442783          	lw	a5,-28(s0)
+  b4:	0207e107          	vle32.v	v2,(a5)
+  b8:	fe442783          	lw	a5,-28(s0)
+  bc:	005787b3          	add	a5,a5,t0
+  c0:	fef42223          	sw	a5,-28(s0)
+  c4:	fec42783          	lw	a5,-20(s0)
+  c8:	fa079ae3          	bnez	a5,7c <loop>
+  cc:	c0001073          	unimp
+  d0:	00000793          	li	a5,0
+  d4:	00078513          	mv	a0,a5
+  d8:	04c12403          	lw	s0,76(sp)
+  dc:	05010113          	addi	sp,sp,80
+  e0:	00008067          	ret
+
+Disassembly of section .rodata:
+
+000000e4 <.rodata>:
+  e4:	4b1a3f43          	fmadd.d	ft10,fs4,fa7,fs1,rup
+  e8:	3f44                	fld	fs1,184(a4)
+  ea:	4b1a                	lw	s6,132(sp)
+  ec:	3f45                	jal	9c <loop+0x20>
+  ee:	4b1a                	lw	s6,132(sp)
+  f0:	3f46                	fld	ft10,112(sp)
+  f2:	4b1a                	lw	s6,132(sp)
+  f4:	4b1a3f47          	fmsub.d	ft10,fs4,fa7,fs1,rup
+  f8:	3e3c                	fld	fa5,120(a2)
+  fa:	272d                	jal	824 <loop+0x7a8>
+  fc:	3e4c                	fld	fa1,184(a2)
+  fe:	272d                	jal	828 <loop+0x7ac>
+ 100:	3e5c                	fld	fa5,184(a2)
+ 102:	272d                	jal	82c <loop+0x7b0>
+ 104:	3e6c                	fld	fa1,248(a2)
+ 106:	272d                	jal	830 <loop+0x7b4>
+ 108:	3e7c                	fld	fa5,248(a2)
+ 10a:	272d                	jal	834 <loop+0x7b8>
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3920                	fld	fs0,112(a0)
+   c:	322e                	fld	ft4,232(sp)
+   e:	302e                	fld	ft0,232(sp)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	2041                	jal	80 <loop+0x4>
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <main+0x14>
+   c:	0016                	c.slli	zero,0x5
+   e:	0000                	unimp
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	5f30                	lw	a2,120(a4)
+  1c:	3276                	fld	ft4,376(sp)
+  1e:	3070                	fld	fa2,224(s0)
+	...
