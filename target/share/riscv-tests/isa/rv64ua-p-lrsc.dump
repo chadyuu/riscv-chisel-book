@@ -1,0 +1,734 @@
+
+rv64ua-p-lrsc:     file format elf64-littleriscv
+
+
+Disassembly of section .text.init:
+
+0000000000000000 <_start>:
+   0:	0480006f          	j	48 <reset_vector>
+
+0000000000000004 <trap_vector>:
+   4:	34202f73          	csrr	t5,mcause
+   8:	00800f93          	li	t6,8
+   c:	03ff0863          	beq	t5,t6,3c <write_tohost>
+  10:	00900f93          	li	t6,9
+  14:	03ff0463          	beq	t5,t6,3c <write_tohost>
+  18:	00b00f93          	li	t6,11
+  1c:	03ff0063          	beq	t5,t6,3c <write_tohost>
+  20:	00000f13          	li	t5,0
+  24:	000f0463          	beqz	t5,2c <trap_vector+0x28>
+  28:	000f0067          	jr	t5
+  2c:	34202f73          	csrr	t5,mcause
+  30:	000f5463          	bgez	t5,38 <handle_exception>
+  34:	0040006f          	j	38 <handle_exception>
+
+0000000000000038 <handle_exception>:
+  38:	5391e193          	ori	gp,gp,1337
+
+000000000000003c <write_tohost>:
+  3c:	00001f17          	auipc	t5,0x1
+  40:	fc3f2223          	sw	gp,-60(t5) # 1000 <tohost>
+  44:	ff9ff06f          	j	3c <write_tohost>
+
+0000000000000048 <reset_vector>:
+  48:	00000093          	li	ra,0
+  4c:	00000113          	li	sp,0
+  50:	00000193          	li	gp,0
+  54:	00000213          	li	tp,0
+  58:	00000293          	li	t0,0
+  5c:	00000313          	li	t1,0
+  60:	00000393          	li	t2,0
+  64:	00000413          	li	s0,0
+  68:	00000493          	li	s1,0
+  6c:	00000513          	li	a0,0
+  70:	00000593          	li	a1,0
+  74:	00000613          	li	a2,0
+  78:	00000693          	li	a3,0
+  7c:	00000713          	li	a4,0
+  80:	00000793          	li	a5,0
+  84:	00000813          	li	a6,0
+  88:	00000893          	li	a7,0
+  8c:	00000913          	li	s2,0
+  90:	00000993          	li	s3,0
+  94:	00000a13          	li	s4,0
+  98:	00000a93          	li	s5,0
+  9c:	00000b13          	li	s6,0
+  a0:	00000b93          	li	s7,0
+  a4:	00000c13          	li	s8,0
+  a8:	00000c93          	li	s9,0
+  ac:	00000d13          	li	s10,0
+  b0:	00000d93          	li	s11,0
+  b4:	00000e13          	li	t3,0
+  b8:	00000e93          	li	t4,0
+  bc:	00000f13          	li	t5,0
+  c0:	00000f93          	li	t6,0
+  c4:	f1402573          	csrr	a0,mhartid
+  c8:	00051063          	bnez	a0,c8 <reset_vector+0x80>
+  cc:	00000297          	auipc	t0,0x0
+  d0:	01028293          	addi	t0,t0,16 # dc <reset_vector+0x94>
+  d4:	30529073          	csrw	mtvec,t0
+  d8:	18005073          	csrwi	satp,0
+  dc:	00000297          	auipc	t0,0x0
+  e0:	02428293          	addi	t0,t0,36 # 100 <reset_vector+0xb8>
+  e4:	30529073          	csrw	mtvec,t0
+  e8:	0010029b          	addiw	t0,zero,1
+  ec:	03529293          	slli	t0,t0,0x35
+  f0:	fff28293          	addi	t0,t0,-1
+  f4:	3b029073          	csrw	pmpaddr0,t0
+  f8:	01f00293          	li	t0,31
+  fc:	3a029073          	csrw	pmpcfg0,t0
+ 100:	30405073          	csrwi	mie,0
+ 104:	00000297          	auipc	t0,0x0
+ 108:	01428293          	addi	t0,t0,20 # 118 <reset_vector+0xd0>
+ 10c:	30529073          	csrw	mtvec,t0
+ 110:	30205073          	csrwi	medeleg,0
+ 114:	30305073          	csrwi	mideleg,0
+ 118:	00000193          	li	gp,0
+ 11c:	00000297          	auipc	t0,0x0
+ 120:	ee828293          	addi	t0,t0,-280 # 4 <trap_vector>
+ 124:	30529073          	csrw	mtvec,t0
+ 128:	00100513          	li	a0,1
+ 12c:	01f51513          	slli	a0,a0,0x1f
+ 130:	00055c63          	bgez	a0,148 <reset_vector+0x100>
+ 134:	0ff0000f          	fence
+ 138:	00100193          	li	gp,1
+ 13c:	05d00893          	li	a7,93
+ 140:	00000513          	li	a0,0
+ 144:	00000073          	ecall
+ 148:	00000293          	li	t0,0
+ 14c:	00028a63          	beqz	t0,160 <reset_vector+0x118>
+ 150:	10529073          	csrw	stvec,t0
+ 154:	0000b2b7          	lui	t0,0xb
+ 158:	1092829b          	addiw	t0,t0,265
+ 15c:	30229073          	csrw	medeleg,t0
+ 160:	30005073          	csrwi	mstatus,0
+ 164:	00000297          	auipc	t0,0x0
+ 168:	01428293          	addi	t0,t0,20 # 178 <reset_vector+0x130>
+ 16c:	34129073          	csrw	mepc,t0
+ 170:	f1402573          	csrr	a0,mhartid
+ 174:	30200073          	mret
+ 178:	00002517          	auipc	a0,0x2
+ 17c:	e8850513          	addi	a0,a0,-376 # 2000 <begin_signature>
+ 180:	00100593          	li	a1,1
+ 184:	00b5262f          	amoadd.w	a2,a1,(a0)
+ 188:	00100693          	li	a3,1
+ 18c:	fed67ee3          	bgeu	a2,a3,188 <reset_vector+0x140>
+ 190:	00052583          	lw	a1,0(a0)
+ 194:	fed5eee3          	bltu	a1,a3,190 <reset_vector+0x148>
+
+0000000000000198 <test_2>:
+ 198:	00002517          	auipc	a0,0x2
+ 19c:	e7050513          	addi	a0,a0,-400 # 2008 <foo>
+ 1a0:	000387b7          	lui	a5,0x38
+ 1a4:	ab77879b          	addiw	a5,a5,-1353
+ 1a8:	00e79793          	slli	a5,a5,0xe
+ 1ac:	eef78793          	addi	a5,a5,-273 # 37eef <_end+0x35adf>
+ 1b0:	18f5272f          	sc.w	a4,a5,(a0)
+ 1b4:	00100393          	li	t2,1
+ 1b8:	00200193          	li	gp,2
+ 1bc:	0c771663          	bne	a4,t2,288 <fail>
+
+00000000000001c0 <test_3>:
+ 1c0:	00002717          	auipc	a4,0x2
+ 1c4:	e4872703          	lw	a4,-440(a4) # 2008 <foo>
+ 1c8:	00000393          	li	t2,0
+ 1cc:	00300193          	li	gp,3
+ 1d0:	0a771c63          	bne	a4,t2,288 <fail>
+
+00000000000001d4 <test_4>:
+ 1d4:	00002517          	auipc	a0,0x2
+ 1d8:	e3450513          	addi	a0,a0,-460 # 2008 <foo>
+ 1dc:	00002597          	auipc	a1,0x2
+ 1e0:	23058593          	addi	a1,a1,560 # 240c <fooTest3>
+ 1e4:	1005a5af          	lr.w	a1,(a1)
+ 1e8:	18b5272f          	sc.w	a4,a1,(a0)
+ 1ec:	00100393          	li	t2,1
+ 1f0:	00400193          	li	gp,4
+ 1f4:	08771a63          	bne	a4,t2,288 <fail>
+ 1f8:	00002517          	auipc	a0,0x2
+ 1fc:	e1050513          	addi	a0,a0,-496 # 2008 <foo>
+ 200:	40000593          	li	a1,1024
+ 204:	00160613          	addi	a2,a2,1
+ 208:	1005272f          	lr.w	a4,(a0)
+ 20c:	00c70733          	add	a4,a4,a2
+ 210:	18e5272f          	sc.w	a4,a4,(a0)
+ 214:	fe071ae3          	bnez	a4,208 <test_4+0x34>
+ 218:	fff58593          	addi	a1,a1,-1
+ 21c:	fe0596e3          	bnez	a1,208 <test_4+0x34>
+ 220:	00002517          	auipc	a0,0x2
+ 224:	de450513          	addi	a0,a0,-540 # 2004 <barrier>
+ 228:	00100593          	li	a1,1
+ 22c:	00b5202f          	amoadd.w	zero,a1,(a0)
+ 230:	00052583          	lw	a1,0(a0)
+ 234:	fed5cee3          	blt	a1,a3,230 <test_4+0x5c>
+ 238:	0ff0000f          	fence
+
+000000000000023c <test_5>:
+ 23c:	00002517          	auipc	a0,0x2
+ 240:	dcc52503          	lw	a0,-564(a0) # 2008 <foo>
+ 244:	00969593          	slli	a1,a3,0x9
+ 248:	40b50533          	sub	a0,a0,a1
+ 24c:	fff68693          	addi	a3,a3,-1
+ 250:	fe06dce3          	bgez	a3,248 <test_5+0xc>
+ 254:	00000393          	li	t2,0
+ 258:	00500193          	li	gp,5
+ 25c:	02751663          	bne	a0,t2,288 <fail>
+
+0000000000000260 <test_6>:
+ 260:	00002517          	auipc	a0,0x2
+ 264:	da850513          	addi	a0,a0,-600 # 2008 <foo>
+ 268:	100525af          	lr.w	a1,(a0)
+ 26c:	180525af          	sc.w	a1,zero,(a0)
+ 270:	fe059ce3          	bnez	a1,268 <test_6+0x8>
+ 274:	180525af          	sc.w	a1,zero,(a0)
+ 278:	00100393          	li	t2,1
+ 27c:	00600193          	li	gp,6
+ 280:	00759463          	bne	a1,t2,288 <fail>
+ 284:	02301063          	bne	zero,gp,2a4 <pass>
+
+0000000000000288 <fail>:
+ 288:	0ff0000f          	fence
+ 28c:	00018063          	beqz	gp,28c <fail+0x4>
+ 290:	00119193          	slli	gp,gp,0x1
+ 294:	0011e193          	ori	gp,gp,1
+ 298:	05d00893          	li	a7,93
+ 29c:	00018513          	mv	a0,gp
+ 2a0:	00000073          	ecall
+
+00000000000002a4 <pass>:
+ 2a4:	0ff0000f          	fence
+ 2a8:	00100193          	li	gp,1
+ 2ac:	05d00893          	li	a7,93
+ 2b0:	00000513          	li	a0,0
+ 2b4:	00000073          	ecall
+ 2b8:	c0001073          	unimp
+
+Disassembly of section .data:
+
+0000000000002000 <begin_signature>:
+    2000:	0000                	unimp
+    2002:	0000                	unimp
+
+0000000000002004 <barrier>:
+    2004:	0000                	unimp
+    2006:	0000                	unimp
+
+0000000000002008 <foo>:
+    2008:	0000                	unimp
+    200a:	0000                	unimp
+    200c:	0000                	unimp
+    200e:	0000                	unimp
+    2010:	0000                	unimp
+    2012:	0000                	unimp
+    2014:	0000                	unimp
+    2016:	0000                	unimp
+    2018:	0000                	unimp
+    201a:	0000                	unimp
+    201c:	0000                	unimp
+    201e:	0000                	unimp
+    2020:	0000                	unimp
+    2022:	0000                	unimp
+    2024:	0000                	unimp
+    2026:	0000                	unimp
+    2028:	0000                	unimp
+    202a:	0000                	unimp
+    202c:	0000                	unimp
+    202e:	0000                	unimp
+    2030:	0000                	unimp
+    2032:	0000                	unimp
+    2034:	0000                	unimp
+    2036:	0000                	unimp
+    2038:	0000                	unimp
+    203a:	0000                	unimp
+    203c:	0000                	unimp
+    203e:	0000                	unimp
+    2040:	0000                	unimp
+    2042:	0000                	unimp
+    2044:	0000                	unimp
+    2046:	0000                	unimp
+    2048:	0000                	unimp
+    204a:	0000                	unimp
+    204c:	0000                	unimp
+    204e:	0000                	unimp
+    2050:	0000                	unimp
+    2052:	0000                	unimp
+    2054:	0000                	unimp
+    2056:	0000                	unimp
+    2058:	0000                	unimp
+    205a:	0000                	unimp
+    205c:	0000                	unimp
+    205e:	0000                	unimp
+    2060:	0000                	unimp
+    2062:	0000                	unimp
+    2064:	0000                	unimp
+    2066:	0000                	unimp
+    2068:	0000                	unimp
+    206a:	0000                	unimp
+    206c:	0000                	unimp
+    206e:	0000                	unimp
+    2070:	0000                	unimp
+    2072:	0000                	unimp
+    2074:	0000                	unimp
+    2076:	0000                	unimp
+    2078:	0000                	unimp
+    207a:	0000                	unimp
+    207c:	0000                	unimp
+    207e:	0000                	unimp
+    2080:	0000                	unimp
+    2082:	0000                	unimp
+    2084:	0000                	unimp
+    2086:	0000                	unimp
+    2088:	0000                	unimp
+    208a:	0000                	unimp
+    208c:	0000                	unimp
+    208e:	0000                	unimp
+    2090:	0000                	unimp
+    2092:	0000                	unimp
+    2094:	0000                	unimp
+    2096:	0000                	unimp
+    2098:	0000                	unimp
+    209a:	0000                	unimp
+    209c:	0000                	unimp
+    209e:	0000                	unimp
+    20a0:	0000                	unimp
+    20a2:	0000                	unimp
+    20a4:	0000                	unimp
+    20a6:	0000                	unimp
+    20a8:	0000                	unimp
+    20aa:	0000                	unimp
+    20ac:	0000                	unimp
+    20ae:	0000                	unimp
+    20b0:	0000                	unimp
+    20b2:	0000                	unimp
+    20b4:	0000                	unimp
+    20b6:	0000                	unimp
+    20b8:	0000                	unimp
+    20ba:	0000                	unimp
+    20bc:	0000                	unimp
+    20be:	0000                	unimp
+    20c0:	0000                	unimp
+    20c2:	0000                	unimp
+    20c4:	0000                	unimp
+    20c6:	0000                	unimp
+    20c8:	0000                	unimp
+    20ca:	0000                	unimp
+    20cc:	0000                	unimp
+    20ce:	0000                	unimp
+    20d0:	0000                	unimp
+    20d2:	0000                	unimp
+    20d4:	0000                	unimp
+    20d6:	0000                	unimp
+    20d8:	0000                	unimp
+    20da:	0000                	unimp
+    20dc:	0000                	unimp
+    20de:	0000                	unimp
+    20e0:	0000                	unimp
+    20e2:	0000                	unimp
+    20e4:	0000                	unimp
+    20e6:	0000                	unimp
+    20e8:	0000                	unimp
+    20ea:	0000                	unimp
+    20ec:	0000                	unimp
+    20ee:	0000                	unimp
+    20f0:	0000                	unimp
+    20f2:	0000                	unimp
+    20f4:	0000                	unimp
+    20f6:	0000                	unimp
+    20f8:	0000                	unimp
+    20fa:	0000                	unimp
+    20fc:	0000                	unimp
+    20fe:	0000                	unimp
+    2100:	0000                	unimp
+    2102:	0000                	unimp
+    2104:	0000                	unimp
+    2106:	0000                	unimp
+    2108:	0000                	unimp
+    210a:	0000                	unimp
+    210c:	0000                	unimp
+    210e:	0000                	unimp
+    2110:	0000                	unimp
+    2112:	0000                	unimp
+    2114:	0000                	unimp
+    2116:	0000                	unimp
+    2118:	0000                	unimp
+    211a:	0000                	unimp
+    211c:	0000                	unimp
+    211e:	0000                	unimp
+    2120:	0000                	unimp
+    2122:	0000                	unimp
+    2124:	0000                	unimp
+    2126:	0000                	unimp
+    2128:	0000                	unimp
+    212a:	0000                	unimp
+    212c:	0000                	unimp
+    212e:	0000                	unimp
+    2130:	0000                	unimp
+    2132:	0000                	unimp
+    2134:	0000                	unimp
+    2136:	0000                	unimp
+    2138:	0000                	unimp
+    213a:	0000                	unimp
+    213c:	0000                	unimp
+    213e:	0000                	unimp
+    2140:	0000                	unimp
+    2142:	0000                	unimp
+    2144:	0000                	unimp
+    2146:	0000                	unimp
+    2148:	0000                	unimp
+    214a:	0000                	unimp
+    214c:	0000                	unimp
+    214e:	0000                	unimp
+    2150:	0000                	unimp
+    2152:	0000                	unimp
+    2154:	0000                	unimp
+    2156:	0000                	unimp
+    2158:	0000                	unimp
+    215a:	0000                	unimp
+    215c:	0000                	unimp
+    215e:	0000                	unimp
+    2160:	0000                	unimp
+    2162:	0000                	unimp
+    2164:	0000                	unimp
+    2166:	0000                	unimp
+    2168:	0000                	unimp
+    216a:	0000                	unimp
+    216c:	0000                	unimp
+    216e:	0000                	unimp
+    2170:	0000                	unimp
+    2172:	0000                	unimp
+    2174:	0000                	unimp
+    2176:	0000                	unimp
+    2178:	0000                	unimp
+    217a:	0000                	unimp
+    217c:	0000                	unimp
+    217e:	0000                	unimp
+    2180:	0000                	unimp
+    2182:	0000                	unimp
+    2184:	0000                	unimp
+    2186:	0000                	unimp
+    2188:	0000                	unimp
+    218a:	0000                	unimp
+    218c:	0000                	unimp
+    218e:	0000                	unimp
+    2190:	0000                	unimp
+    2192:	0000                	unimp
+    2194:	0000                	unimp
+    2196:	0000                	unimp
+    2198:	0000                	unimp
+    219a:	0000                	unimp
+    219c:	0000                	unimp
+    219e:	0000                	unimp
+    21a0:	0000                	unimp
+    21a2:	0000                	unimp
+    21a4:	0000                	unimp
+    21a6:	0000                	unimp
+    21a8:	0000                	unimp
+    21aa:	0000                	unimp
+    21ac:	0000                	unimp
+    21ae:	0000                	unimp
+    21b0:	0000                	unimp
+    21b2:	0000                	unimp
+    21b4:	0000                	unimp
+    21b6:	0000                	unimp
+    21b8:	0000                	unimp
+    21ba:	0000                	unimp
+    21bc:	0000                	unimp
+    21be:	0000                	unimp
+    21c0:	0000                	unimp
+    21c2:	0000                	unimp
+    21c4:	0000                	unimp
+    21c6:	0000                	unimp
+    21c8:	0000                	unimp
+    21ca:	0000                	unimp
+    21cc:	0000                	unimp
+    21ce:	0000                	unimp
+    21d0:	0000                	unimp
+    21d2:	0000                	unimp
+    21d4:	0000                	unimp
+    21d6:	0000                	unimp
+    21d8:	0000                	unimp
+    21da:	0000                	unimp
+    21dc:	0000                	unimp
+    21de:	0000                	unimp
+    21e0:	0000                	unimp
+    21e2:	0000                	unimp
+    21e4:	0000                	unimp
+    21e6:	0000                	unimp
+    21e8:	0000                	unimp
+    21ea:	0000                	unimp
+    21ec:	0000                	unimp
+    21ee:	0000                	unimp
+    21f0:	0000                	unimp
+    21f2:	0000                	unimp
+    21f4:	0000                	unimp
+    21f6:	0000                	unimp
+    21f8:	0000                	unimp
+    21fa:	0000                	unimp
+    21fc:	0000                	unimp
+    21fe:	0000                	unimp
+    2200:	0000                	unimp
+    2202:	0000                	unimp
+    2204:	0000                	unimp
+    2206:	0000                	unimp
+    2208:	0000                	unimp
+    220a:	0000                	unimp
+    220c:	0000                	unimp
+    220e:	0000                	unimp
+    2210:	0000                	unimp
+    2212:	0000                	unimp
+    2214:	0000                	unimp
+    2216:	0000                	unimp
+    2218:	0000                	unimp
+    221a:	0000                	unimp
+    221c:	0000                	unimp
+    221e:	0000                	unimp
+    2220:	0000                	unimp
+    2222:	0000                	unimp
+    2224:	0000                	unimp
+    2226:	0000                	unimp
+    2228:	0000                	unimp
+    222a:	0000                	unimp
+    222c:	0000                	unimp
+    222e:	0000                	unimp
+    2230:	0000                	unimp
+    2232:	0000                	unimp
+    2234:	0000                	unimp
+    2236:	0000                	unimp
+    2238:	0000                	unimp
+    223a:	0000                	unimp
+    223c:	0000                	unimp
+    223e:	0000                	unimp
+    2240:	0000                	unimp
+    2242:	0000                	unimp
+    2244:	0000                	unimp
+    2246:	0000                	unimp
+    2248:	0000                	unimp
+    224a:	0000                	unimp
+    224c:	0000                	unimp
+    224e:	0000                	unimp
+    2250:	0000                	unimp
+    2252:	0000                	unimp
+    2254:	0000                	unimp
+    2256:	0000                	unimp
+    2258:	0000                	unimp
+    225a:	0000                	unimp
+    225c:	0000                	unimp
+    225e:	0000                	unimp
+    2260:	0000                	unimp
+    2262:	0000                	unimp
+    2264:	0000                	unimp
+    2266:	0000                	unimp
+    2268:	0000                	unimp
+    226a:	0000                	unimp
+    226c:	0000                	unimp
+    226e:	0000                	unimp
+    2270:	0000                	unimp
+    2272:	0000                	unimp
+    2274:	0000                	unimp
+    2276:	0000                	unimp
+    2278:	0000                	unimp
+    227a:	0000                	unimp
+    227c:	0000                	unimp
+    227e:	0000                	unimp
+    2280:	0000                	unimp
+    2282:	0000                	unimp
+    2284:	0000                	unimp
+    2286:	0000                	unimp
+    2288:	0000                	unimp
+    228a:	0000                	unimp
+    228c:	0000                	unimp
+    228e:	0000                	unimp
+    2290:	0000                	unimp
+    2292:	0000                	unimp
+    2294:	0000                	unimp
+    2296:	0000                	unimp
+    2298:	0000                	unimp
+    229a:	0000                	unimp
+    229c:	0000                	unimp
+    229e:	0000                	unimp
+    22a0:	0000                	unimp
+    22a2:	0000                	unimp
+    22a4:	0000                	unimp
+    22a6:	0000                	unimp
+    22a8:	0000                	unimp
+    22aa:	0000                	unimp
+    22ac:	0000                	unimp
+    22ae:	0000                	unimp
+    22b0:	0000                	unimp
+    22b2:	0000                	unimp
+    22b4:	0000                	unimp
+    22b6:	0000                	unimp
+    22b8:	0000                	unimp
+    22ba:	0000                	unimp
+    22bc:	0000                	unimp
+    22be:	0000                	unimp
+    22c0:	0000                	unimp
+    22c2:	0000                	unimp
+    22c4:	0000                	unimp
+    22c6:	0000                	unimp
+    22c8:	0000                	unimp
+    22ca:	0000                	unimp
+    22cc:	0000                	unimp
+    22ce:	0000                	unimp
+    22d0:	0000                	unimp
+    22d2:	0000                	unimp
+    22d4:	0000                	unimp
+    22d6:	0000                	unimp
+    22d8:	0000                	unimp
+    22da:	0000                	unimp
+    22dc:	0000                	unimp
+    22de:	0000                	unimp
+    22e0:	0000                	unimp
+    22e2:	0000                	unimp
+    22e4:	0000                	unimp
+    22e6:	0000                	unimp
+    22e8:	0000                	unimp
+    22ea:	0000                	unimp
+    22ec:	0000                	unimp
+    22ee:	0000                	unimp
+    22f0:	0000                	unimp
+    22f2:	0000                	unimp
+    22f4:	0000                	unimp
+    22f6:	0000                	unimp
+    22f8:	0000                	unimp
+    22fa:	0000                	unimp
+    22fc:	0000                	unimp
+    22fe:	0000                	unimp
+    2300:	0000                	unimp
+    2302:	0000                	unimp
+    2304:	0000                	unimp
+    2306:	0000                	unimp
+    2308:	0000                	unimp
+    230a:	0000                	unimp
+    230c:	0000                	unimp
+    230e:	0000                	unimp
+    2310:	0000                	unimp
+    2312:	0000                	unimp
+    2314:	0000                	unimp
+    2316:	0000                	unimp
+    2318:	0000                	unimp
+    231a:	0000                	unimp
+    231c:	0000                	unimp
+    231e:	0000                	unimp
+    2320:	0000                	unimp
+    2322:	0000                	unimp
+    2324:	0000                	unimp
+    2326:	0000                	unimp
+    2328:	0000                	unimp
+    232a:	0000                	unimp
+    232c:	0000                	unimp
+    232e:	0000                	unimp
+    2330:	0000                	unimp
+    2332:	0000                	unimp
+    2334:	0000                	unimp
+    2336:	0000                	unimp
+    2338:	0000                	unimp
+    233a:	0000                	unimp
+    233c:	0000                	unimp
+    233e:	0000                	unimp
+    2340:	0000                	unimp
+    2342:	0000                	unimp
+    2344:	0000                	unimp
+    2346:	0000                	unimp
+    2348:	0000                	unimp
+    234a:	0000                	unimp
+    234c:	0000                	unimp
+    234e:	0000                	unimp
+    2350:	0000                	unimp
+    2352:	0000                	unimp
+    2354:	0000                	unimp
+    2356:	0000                	unimp
+    2358:	0000                	unimp
+    235a:	0000                	unimp
+    235c:	0000                	unimp
+    235e:	0000                	unimp
+    2360:	0000                	unimp
+    2362:	0000                	unimp
+    2364:	0000                	unimp
+    2366:	0000                	unimp
+    2368:	0000                	unimp
+    236a:	0000                	unimp
+    236c:	0000                	unimp
+    236e:	0000                	unimp
+    2370:	0000                	unimp
+    2372:	0000                	unimp
+    2374:	0000                	unimp
+    2376:	0000                	unimp
+    2378:	0000                	unimp
+    237a:	0000                	unimp
+    237c:	0000                	unimp
+    237e:	0000                	unimp
+    2380:	0000                	unimp
+    2382:	0000                	unimp
+    2384:	0000                	unimp
+    2386:	0000                	unimp
+    2388:	0000                	unimp
+    238a:	0000                	unimp
+    238c:	0000                	unimp
+    238e:	0000                	unimp
+    2390:	0000                	unimp
+    2392:	0000                	unimp
+    2394:	0000                	unimp
+    2396:	0000                	unimp
+    2398:	0000                	unimp
+    239a:	0000                	unimp
+    239c:	0000                	unimp
+    239e:	0000                	unimp
+    23a0:	0000                	unimp
+    23a2:	0000                	unimp
+    23a4:	0000                	unimp
+    23a6:	0000                	unimp
+    23a8:	0000                	unimp
+    23aa:	0000                	unimp
+    23ac:	0000                	unimp
+    23ae:	0000                	unimp
+    23b0:	0000                	unimp
+    23b2:	0000                	unimp
+    23b4:	0000                	unimp
+    23b6:	0000                	unimp
+    23b8:	0000                	unimp
+    23ba:	0000                	unimp
+    23bc:	0000                	unimp
+    23be:	0000                	unimp
+    23c0:	0000                	unimp
+    23c2:	0000                	unimp
+    23c4:	0000                	unimp
+    23c6:	0000                	unimp
+    23c8:	0000                	unimp
+    23ca:	0000                	unimp
+    23cc:	0000                	unimp
+    23ce:	0000                	unimp
+    23d0:	0000                	unimp
+    23d2:	0000                	unimp
+    23d4:	0000                	unimp
+    23d6:	0000                	unimp
+    23d8:	0000                	unimp
+    23da:	0000                	unimp
+    23dc:	0000                	unimp
+    23de:	0000                	unimp
+    23e0:	0000                	unimp
+    23e2:	0000                	unimp
+    23e4:	0000                	unimp
+    23e6:	0000                	unimp
+    23e8:	0000                	unimp
+    23ea:	0000                	unimp
+    23ec:	0000                	unimp
+    23ee:	0000                	unimp
+    23f0:	0000                	unimp
+    23f2:	0000                	unimp
+    23f4:	0000                	unimp
+    23f6:	0000                	unimp
+    23f8:	0000                	unimp
+    23fa:	0000                	unimp
+    23fc:	0000                	unimp
+    23fe:	0000                	unimp
+    2400:	0000                	unimp
+    2402:	0000                	unimp
+    2404:	0000                	unimp
+    2406:	0000                	unimp
+    2408:	0000                	unimp
+    240a:	0000                	unimp
+
+000000000000240c <fooTest3>:
+    240c:	0000                	unimp
+    240e:	0000                	unimp
