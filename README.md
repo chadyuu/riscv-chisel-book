@@ -10,3 +10,14 @@ https://www.amazon.co.jp/dp/4297123053/
 > CPU設計に用いる基本言語としては、Velilogを抽象化したHDL(ハードウェア記述言語)であるChiselを利用しています。  
 > CPUの自作範囲に関して、手順が煩雑なFPGAでの動作確認は行わず、ソフトウェア上でエミュレーションをゴールとしているので、ソフトウェアエンジニアの方にも取っ付きやすいものとなっています。  
 > 巻末には、昨今RISC-Vが注目されている理由を整理するため、RISC-Vのもたらす価値についてまとめています。
+
+## Docker Hub
+
+執筆時点からの状況の変化によりdockerfileが機能しなくなる可能性があります。
+その場合、著者のDocker Hubから直接イメージをダウンロードしてください。
+
+https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book
+
+```
+docker pull yutaronishiyama/riscv-chisel-book
+```
