@@ -13,7 +13,7 @@ https://www.amazon.co.jp/dp/4297123053/
 
 ## Docker Hub
 
-執筆時点からの状況の変化によりdockerfileが機能しなくなる可能性があります。
+執筆時点からの状況の変化によりDockerfileが機能しなくなる可能性があります。
 その場合、著者のDocker Hubから直接イメージをダウンロードしてください。
 
 https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book
