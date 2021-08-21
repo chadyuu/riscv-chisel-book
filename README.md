@@ -28,7 +28,7 @@ docker pull yutaronishiyama/riscv-chisel-book
 
 ### なぜ他のHDLではなくChiselを選んだのですか？
 
-前提として本書はHDLや論理回路にほとんど触れたことが無い人をターゲットにしています。そういった中で初めて触れるHDLとしてChiselは以下の利点があります。
+前提として本書はHDLや論理回路にほとんど触れたことがない人をターゲットにしています。そういった中で初めて触れるHDLとしてChiselは以下の利点があります。
 
 1. RISC-Vの主力実装がChiselで書かれており、RISC-Vを学ぶ上では切り離せない。
 2. FIRRTLのサイクル精度シミュレータ(Treadle) を内蔵しており、ChiselTestを使ってサクッとサイクル精度シミュレーションを行える。
