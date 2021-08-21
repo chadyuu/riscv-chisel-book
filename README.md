@@ -1,5 +1,8 @@
 # RISC-VとChiselで学ぶ はじめてのCPU自作 ――オープンソース命令セットによるカスタムCPU実装への第一歩
 
+![cover](https://user-images.githubusercontent.com/8579255/130305929-17113e1b-c9e7-4e51-8213-7238a140c01a.jpg)
+
+
 本リポジトリは書籍「RISC-VとChiselで学ぶ はじめてのCPU自作 ――オープンソース命令セットによるカスタムCPU実装への第一歩」用です。
 
 https://www.amazon.co.jp/dp/4297123053/
