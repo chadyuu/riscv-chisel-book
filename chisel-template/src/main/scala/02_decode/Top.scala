@@ -8,7 +8,7 @@ class Top extends Module {
     val exit = Output(Bool())
   })
   val core = Module(new Core())
-  val memory = Module(new Memory("src/c/fetch.hex"))
+  val memory = Module(new Memory())
   core.io.imem <> memory.io.imem
   io.exit := core.io.exit
 }

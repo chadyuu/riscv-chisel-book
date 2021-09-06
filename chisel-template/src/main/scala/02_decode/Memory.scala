@@ -10,7 +10,7 @@ class ImemPortIo extends Bundle {
   val inst = Output(UInt(WORD_LEN.W))
 }
 
-class Memory(hex: String) extends Module {
+class Memory extends Module {
   val io = IO(new Bundle {
     val imem = new ImemPortIo
   })

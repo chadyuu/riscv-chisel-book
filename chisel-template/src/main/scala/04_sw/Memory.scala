@@ -17,7 +17,7 @@ class DmemPortIo extends Bundle {
   val wdata = Input(UInt(WORD_LEN.W)) // 追加
 }
 
-class Memory(hex: String) extends Module {
+class Memory extends Module {
 
   val io = IO(new Bundle {
     val imem = new ImemPortIo
