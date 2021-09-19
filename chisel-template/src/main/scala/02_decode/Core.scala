@@ -1,7 +1,6 @@
 package decode
 
 import chisel3._
-import chisel3.util._
 import common.Consts._
 
 class Core extends Module {
