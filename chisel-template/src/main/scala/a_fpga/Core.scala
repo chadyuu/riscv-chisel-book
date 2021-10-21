@@ -5,6 +5,35 @@ import chisel3.util._
 import common.Instructions._
 import common.Consts._
 
+class LongCounter(unitWidth: Int, unitCount: Int) extends Module {
+  val counterWidth = unitWidth * unitCount
+  val io = IO(new Bundle {
+    val value = Output(UInt(counterWidth.W))
+  })
+
+  // val counters = RegInit(VecInit((0 to unitCount - 1).map(_ => 0.U(unitWidth.W))))
+  // val carries = RegInit(VecInit((0 to unitCount - 1).map(_ => false.B)))
+  // for(i <- 0 to unitCount - 1) {
+  //   carries(i) := counters(i)(unitWidth - 1, 1).andR() && !counters(i)(0) // overflows at the next cycle or not.
+  //   if( i == 0 ) {
+  //     counters(i) := counters(i) + 1.U
+  //   } else {
+  //     counters(i) := counters(i) + carries(i - 1).asUInt
+  //   }
+  // }
+  // io.value := Cat(counters.reverse)
+  val counter = RegInit(0.U(counterWidth.W))
+  counter := counter + 1.U
+  io.value := counter
+}
+
+class CoreDebugSignals extends Bundle {
+  val mem_reg_pc = Output(UInt(WORD_LEN.W))
+  val csr_rdata = Output(UInt(WORD_LEN.W))
+  val mem_reg_csr_addr = Output(UInt(WORD_LEN.W))
+  val cycle_counter = Output(UInt(64.W))
+}
+
 class Core(startAddress: BigInt = 0) extends Module {
   val io = IO(
     new Bundle {
@@ -12,12 +41,14 @@ class Core(startAddress: BigInt = 0) extends Module {
       val dmem = Flipped(new DmemPortIo())
       val gp   = Output(UInt(WORD_LEN.W))
       val exit = Output(Bool())
+      val debug_signal = new CoreDebugSignals()
     }
   )
 
   val regfile = Mem(32, UInt(WORD_LEN.W))
   //val csr_regfile = Mem(4096, UInt(WORD_LEN.W)) 
   val csr_trap_vector = RegInit(0.U(WORD_LEN.W))
+  val cycle_counter = Module(new LongCounter(8, 8)) // 64-bit cycle counter for CYCLE[H] CSR
 
   //**********************************
   // Pipeline State Registers
@@ -299,7 +330,11 @@ class Core(startAddress: BigInt = 0) extends Module {
   mem_stall_flg := io.dmem.ren && !io.dmem.rvalid
 
   // CSR
-  val csr_rdata = Mux(mem_reg_csr_addr === 0x305.U, csr_trap_vector, 0.U)
+  val csr_rdata = MuxLookup(mem_reg_csr_addr, 0.U(WORD_LEN.W), Seq(
+    0x305.U -> csr_trap_vector,
+    CSR_ADDR_CYCLE  -> cycle_counter.io.value(31, 0),
+    CSR_ADDR_CYCLEH -> cycle_counter.io.value(63, 32),
+  ))
 
   val csr_wdata = MuxCase(0.U(WORD_LEN.W), Seq(
     (mem_reg_csr_cmd === CSR_W) -> mem_reg_op1_data,
@@ -351,6 +386,11 @@ class Core(startAddress: BigInt = 0) extends Module {
     regfile(wb_reg_wb_addr) := wb_reg_wb_data
   }
 
+  // Debug signals
+  io.debug_signal.cycle_counter := cycle_counter.io.value
+  io.debug_signal.csr_rdata := csr_rdata
+  io.debug_signal.mem_reg_csr_addr := mem_reg_csr_addr
+  io.debug_signal.mem_reg_pc := mem_reg_pc
 
   //**********************************
   // IO & Debug

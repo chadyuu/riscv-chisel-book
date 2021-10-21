@@ -89,4 +89,7 @@ object Consts {
   val CSR_C   = 3.U(CSR_LEN.W)
   val CSR_E   = 4.U(CSR_LEN.W)
   val CSR_V   = 5.U(CSR_LEN.W)
+
+  val CSR_ADDR_CYCLE = 0xc00.U(12.W)
+  val CSR_ADDR_CYCLEH = 0xc80.U(12.W)
 }

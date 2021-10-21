@@ -1,0 +1,6 @@
+project
+.Xil
+*.jou
+*.str
+*.log
+*.xsa

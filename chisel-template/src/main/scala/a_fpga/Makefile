@@ -3,7 +3,7 @@
 CC = riscv64-unknown-elf-gcc
 OBJDUMP = riscv64-unknown-elf-objdump
 OBJCOPY = riscv64-unknown-elf-objcopy
-CFLAGS = -mabi=ilp32 -march=rv32i 
+CFLAGS = -mabi=ilp32 -march=rv32i -Os -g
 LDFLAGS = -Wl,-Tlink.ld -nostartfiles 
 
 OBJS := bootrom.o
