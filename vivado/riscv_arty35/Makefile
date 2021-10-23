@@ -46,6 +46,6 @@ $(BOOTROM): src/sw/bootrom.c src/sw/link.ld src/sw/Makefile
 	cd src/sw; make all
 
 $(RISCV_CORE_DIR)/riscv.v:
-	cd ../../chisel-template; sbt runMain fpga.Elaborate
+	cd ../../chisel-template; sbt "runMain fpga.Elaborate"
 
 src/riscv.v: $(RISCV_CORE_DIR)/riscv.v
