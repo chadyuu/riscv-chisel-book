@@ -36,7 +36,7 @@ clean:
 open: project/$(PROJECT_NAME).xpr
 	$(VIVADO) $<&
 
-project/$(PROJECT_NAME).xpr: $(SRCS) $(BOOTROM) $(RISCV_CORE_DIR)/riscv.v
+project/$(PROJECT_NAME).xpr: $(SRCS) $(BOOTROM)
 	$(VIVADO) -mode batch -source restore_project.tcl -tclargs $(PROJECT_NAME) ${BD_NAME} ${TARGET_PART}
 
 $(BITSTREAM) $(HARDWARE_DEF): project/$(PROJECT_NAME).xpr $(SRCS) project/$(PROJECT_NAME).srcs/sources_1/bd/$(BD_NAME)/$(BD_NAME).bd
@@ -47,3 +47,5 @@ $(BOOTROM): src/sw/bootrom.c src/sw/link.ld src/sw/Makefile
 
 $(RISCV_CORE_DIR)/riscv.v:
 	cd ../../chisel-template; sbt runMain fpga.Elaborate
+
+src/riscv.v: $(RISCV_CORE_DIR)/riscv.v
