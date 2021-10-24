@@ -25,6 +25,10 @@ https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book
 docker pull yutaronishiyama/riscv-chisel-book
 ```
 
+## FPGA実装版
+
+FPGA実装版は [fpgaブランチ](https://github.com/chadyuu/riscv-chisel-book/tree/fpga) にあります。
+
 ## FAQ
 
 書籍内で説明していなかった部分で、質問をいただいたものについて適宜記載します。
