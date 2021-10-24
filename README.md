@@ -27,9 +27,9 @@ docker pull yutaronishiyama/riscv-chisel-book
 
 ## FPGA実装
 
-FPGA実装の本体は chisel-template/src/a_fpga 以下にあります。
+FPGA実装の本体は [chisel-template/src/main/scala/a_fpga](chisel-template/src/main/scala/a_fpga) 以下にあります。
 
-また、Digilent Arty-A7向けのVivadoプロジェクト周りは vivado/riscv_arty35 にあります。(arty35とありますが、 Arty-A7-100も対応しています。)
+また、Digilent Arty-A7向けのVivadoプロジェクト周りは [vivado/riscv_arty35](vivado/riscv_arty35) にあります。(arty35とありますが、 Arty-A7-100も対応しています。)
 
 詳細はそれぞれのディレクトリのREADME.mdを参照してください。
 
