@@ -25,6 +25,11 @@ https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book
 docker pull yutaronishiyama/riscv-chisel-book
 ```
 
+## Critical Update
+
+### [2022-05-16](https://github.com/chadyuu/riscv-chisel-book/commit/2fff54720a17c86f2e421a455ecaac3e72a294a7)
+dockerfile更新。riscv/riscv-gnu-toolchain.gitのrvv-0.9.xブランチが削除されたため、書籍に掲載したdockerfileではbuildに失敗してしまいます。そのため、forkしたchadyuu/riscv-gnu-toolchain.gitのrvv-0.9.x-for-bookブランチを参照するよう変更しました。
+
 ## FPGA実装版
 
 FPGA実装版は [fpgaブランチ](https://github.com/chadyuu/riscv-chisel-book/tree/fpga) にあります。
