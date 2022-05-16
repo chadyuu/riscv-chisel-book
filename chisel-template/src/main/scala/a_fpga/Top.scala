@@ -70,13 +70,13 @@ class Gpio() extends Module {
 }
 
 
-class Uart() extends Module {
+class Uart(clockHz: Int, baudRate: Int = 115200) extends Module {
   val io = IO(new Bundle {
     val mem = new DmemPortIo
     val tx = Output(Bool())
   })
 
-  val tx = Module(new UartTx(8, 80000000/115200))
+  val tx = Module(new UartTx(8, clockHz/baudRate))
   val txValid = RegInit(false.B)
   val txReady = WireDefault(tx.io.in.ready)
   val txData = RegInit(0.U(8.W))
@@ -100,14 +100,14 @@ class Uart() extends Module {
   io.tx <> tx.io.tx // Connect UART TX signal.
 }
 
-class Config() extends Module {
+class Config(clockHz: Int) extends Module {
   val io = IO(new Bundle {
     val mem = new DmemPortIo
   })
 
   io.mem.rdata := MuxLookup(io.mem.raddr(2, 2), "xDEADBEEF".U, Seq(
     0.U -> "x01234567".U,
-    1.U -> 80000000.U,
+    1.U -> clockHz.U,
   ))
   io.mem.rvalid := true.B
   io.mem.wready := true.B
@@ -147,7 +147,7 @@ class RiscVDebugSignals extends Bundle {
   val wdata = Output(UInt(WORD_LEN.W))
 }
 
-class RiscV extends Module {
+class RiscV(clockHz: Int) extends Module {
   val imemSizeInBytes = 2048
   val dmemSizeInBytes = 512
   val startAddress = 0x08000000L
@@ -166,8 +166,8 @@ class RiscV extends Module {
   val memory = Module(new Memory(null, imemSizeInBytes, dmemSizeInBytes, false))
   val imem_dbus = Module(new SingleCycleMem(imemSizeInBytes))
   val gpio = Module(new Gpio)
-  val uart = Module(new Uart)
-  val config = Module(new Config)
+  val uart = Module(new Uart(clockHz))
+  val config = Module(new Config(clockHz))
 
   val decoder = Module(new DMemDecoder(Seq(
     (BigInt(startAddress), BigInt(imemSizeInBytes)),
@@ -206,9 +206,24 @@ class RiscV extends Module {
   io.uart_tx <> uart.io.tx
 }
 
-object Elaborate extends App {
-  (new ChiselStage).emitVerilog(new RiscV, Array(
+object ElaborateArtyA7 extends App {
+  (new ChiselStage).emitVerilog(new RiscV(80000000), Array(
     "-o", "riscv.v",
-    "--target-dir", "rtl/riscv",
+    "--target-dir", "rtl/riscv_arty_a7",
   ))
 }
+
+object ElaborateRunber extends App {
+  (new ChiselStage).emitVerilog(new RiscV(12000000), Array(
+    "-o", "riscv.v",
+    "--target-dir", "rtl/riscv_runber",
+  ))
+}
+
+object ElaborateTangNano9K extends App {
+  (new ChiselStage).emitVerilog(new RiscV(27000000), Array(
+    "-o", "riscv.v",
+    "--target-dir", "rtl/riscv_tangnano9k",
+  ))
+}
+
