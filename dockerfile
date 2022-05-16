@@ -10,9 +10,11 @@ RUN apt update && \
 	apt install -y autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev pkg-config git libusb-1.0-0-dev device-tree-compiler default-jdk gnupg vim 
 
 # riscv-gnu-toolchain(ベクトル対応ver.)のビルド
-RUN git clone -b rvv-0.9.x --single-branch https://github.com/riscv/riscv-gnu-toolchain.git && \
-	cd riscv-gnu-toolchain && git checkout 5842fde8ee5bb3371643b60ed34906eff7a5fa31 && \
-	git submodule update --init --recursive
+RUN git clone -b rvv-0.9.x-for-book --single-branch https://github.com/chadyuu/riscv-gnu-toolchain.git
+RUN	cd riscv-gnu-toolchain && git submodule update --init --recursive riscv-binutils
+RUN	cd riscv-gnu-toolchain && git submodule update --init --recursive riscv-gcc
+RUN	cd riscv-gnu-toolchain && git submodule update --init --recursive riscv-newlib
+RUN	cd riscv-gnu-toolchain && git submodule update --init --recursive riscv-gdb
 RUN cd riscv-gnu-toolchain && mkdir build && cd build && ../configure --prefix=${RISCV} --enable-multilib && make
 
 # riscv-testsのダウンロード
