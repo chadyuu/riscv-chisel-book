@@ -5,100 +5,6 @@ import chisel3.util._
 import common.Consts._
 import chisel3.stage.ChiselStage
 
-class DMemDecoder(targetAddressRanges: Seq[(BigInt, BigInt)]) extends Module {
-  val io = IO(new Bundle {
-    val initiator = new DmemPortIo()
-    val targets = Vec(targetAddressRanges.size, Flipped(new DmemPortIo))
-  })
-
-  val rvalid = WireDefault(true.B)
-  val rdata = WireDefault("xdeadbeef".U(32.W))
-  val wready = WireDefault(false.B)
-
-  io.initiator.rvalid := rvalid
-  io.initiator.rdata := rdata
-  io.initiator.wready := wready
-
-  for(((start, length), index) <- targetAddressRanges.zipWithIndex) {
-    val target = io.targets(index)
-
-    val raddr = WireDefault(0.U(32.W))
-    val ren = WireDefault(false.B)
-    val waddr = WireDefault(0.U(32.W))
-    val wen = WireDefault(false.B)
-    val wdata = WireDefault("xdeadbeef".U(32.W))
-    val wstrb = WireDefault("b1111".U)
-    
-    target.raddr := raddr
-    target.ren := ren
-    target.waddr := waddr
-    target.wen := wen
-    target.wdata := wdata
-    target.wstrb := wstrb
-
-    when(start.U <= io.initiator.raddr && io.initiator.raddr < (start + length).U ) {
-      raddr := io.initiator.raddr - start.U
-      ren := io.initiator.ren
-      rvalid := target.rvalid
-      rdata := target.rdata
-    }
-    when(start.U <= io.initiator.waddr && io.initiator.waddr < (start + length).U ) {
-      waddr := io.initiator.waddr - start.U
-      wen := io.initiator.wen
-      wdata := io.initiator.wdata
-      wstrb := io.initiator.wstrb
-      wready := target.wready
-    }
-  }
-}
-
-class Gpio() extends Module {
-  val io = IO(new Bundle {
-    val mem = new DmemPortIo
-    val gpio = Output(UInt(32.W))
-  })
-
-  val output = RegInit(0.U(32.W))
-  io.gpio := output
-
-  io.mem.rdata := "xdeadbeef".U
-  io.mem.rvalid := true.B
-  io.mem.wready := true.B
-  when(io.mem.wen) {
-    output := io.mem.wdata
-  }
-}
-
-
-class Uart(clockHz: Int, baudRate: Int = 115200) extends Module {
-  val io = IO(new Bundle {
-    val mem = new DmemPortIo
-    val tx = Output(Bool())
-  })
-
-  val tx = Module(new UartTx(8, clockHz/baudRate))
-  val txValid = RegInit(false.B)
-  val txReady = WireDefault(tx.io.in.ready)
-  val txData = RegInit(0.U(8.W))
-  tx.io.in.valid := txValid
-  tx.io.in.bits := txData
-
-  when(txValid && txReady) {
-    txValid := false.B
-  }
-
-  io.mem.rdata := Cat(0.U(31.W), txValid.asUInt)
-  io.mem.rvalid := true.B
-  io.mem.wready := true.B
-  when(io.mem.wen) {
-    when( !txValid ) {  //Send TX Data if not busy.
-      txValid := true.B
-      txData := io.mem.wdata
-    }
-  }
-
-  io.tx <> tx.io.tx // Connect UART TX signal.
-}
 
 class Config(clockHz: Int) extends Module {
   val io = IO(new Bundle {
@@ -110,25 +16,6 @@ class Config(clockHz: Int) extends Module {
     1.U -> clockHz.U,
   ))
   io.mem.rvalid := true.B
-  io.mem.wready := true.B
-}
-
-
-class SingleCycleMem(sizeInBytes: Int) extends Module {
-  val io = IO(new Bundle {
-    val mem = new DmemPortIo
-    val read = new MemoryReadPort(sizeInBytes/4, UInt(32.W))
-    val write = new MemoryWritePort(sizeInBytes/4, UInt(32.W))
-  })
-
-  io.read.address := io.mem.raddr
-  io.read.enable := io.mem.ren
-  io.mem.rdata := io.read.data
-  io.mem.rvalid := RegNext(io.mem.ren, false.B)
-
-  io.write.address := io.mem.waddr
-  io.write.enable := io.mem.wen
-  io.write.data := io.mem.wdata
   io.mem.wready := true.B
 }
 

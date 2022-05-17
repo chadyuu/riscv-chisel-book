@@ -89,3 +89,33 @@ class UartRx(numberOfBits: Int, baudDivider: Int, rxSyncStages: Int) extends Mod
     }
 
 }
+
+class Uart(clockHz: Int, baudRate: Int = 115200) extends Module {
+  val io = IO(new Bundle {
+    val mem = new DmemPortIo
+    val tx = Output(Bool())
+  })
+
+  val tx = Module(new UartTx(8, clockHz/baudRate))
+  val txValid = RegInit(false.B)
+  val txReady = WireDefault(tx.io.in.ready)
+  val txData = RegInit(0.U(8.W))
+  tx.io.in.valid := txValid
+  tx.io.in.bits := txData
+
+  when(txValid && txReady) {
+    txValid := false.B
+  }
+
+  io.mem.rdata := Cat(0.U(31.W), txValid.asUInt)
+  io.mem.rvalid := true.B
+  io.mem.wready := true.B
+  when(io.mem.wen) {
+    when( !txValid ) {  //Send TX Data if not busy.
+      txValid := true.B
+      txData := io.mem.wdata
+    }
+  }
+
+  io.tx <> tx.io.tx // Connect UART TX signal.
+}
