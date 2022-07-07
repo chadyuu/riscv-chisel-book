@@ -89,7 +89,7 @@ class RiscV(clockHz: Int) extends Module {
   io.debugSignals.wstrb  := core.io.dmem.wstrb
 
   io.exit := core.io.exit
-  io.gpio <> gpio.io.gpio
+  io.gpio <> gpio.io.out
   io.uart_tx <> uart.io.tx
 }
 

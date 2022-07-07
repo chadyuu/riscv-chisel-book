@@ -61,7 +61,7 @@ class Memory(dataMemoryPath: String = null, imemSizeInBytes: Int = 16384, dmemSi
   io.dmem.rvalid := rvalid
   
   rvalid := false.B
-  when( !io.dmem.wen && io.dmem.ren ) {
+  when( !io.dmem.wen && io.dmem.ren && !rvalid) {
     rdata := Cat(dataMem.read(io.dmem.raddr(WORD_LEN-1, 2)).reverse)
     rvalid := true.B
   } 

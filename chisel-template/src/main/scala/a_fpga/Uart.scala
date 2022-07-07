@@ -94,6 +94,7 @@ class Uart(clockHz: Int, baudRate: Int = 115200) extends Module {
   val io = IO(new Bundle {
     val mem = new DmemPortIo
     val tx = Output(Bool())
+    val rx = Input(Bool())
   })
 
   val tx = Module(new UartTx(8, clockHz/baudRate))
@@ -107,7 +108,25 @@ class Uart(clockHz: Int, baudRate: Int = 115200) extends Module {
     txValid := false.B
   }
 
-  io.mem.rdata := Cat(0.U(31.W), txValid.asUInt)
+  val rx = Module(new UartRx(8, clockHz/baudRate, 2))
+  val rxValid = RegInit(false.B)
+  rx.io.out.ready := true.B
+  val rxData = RegInit(0.U(8.W))
+  rx.io.rx := io.rx
+  
+  when(io.mem.ren && io.mem.raddr(2, 2) === 0.U) {
+    rxValid := false.B
+  }
+  when(rx.io.out.valid && !rxValid) {
+    rxValid := true.B
+    rxData := rx.io.out.bits
+  }
+
+  io.mem.rdata := MuxLookup(io.mem.raddr(2, 2), "xDEADBEEF".U, Seq(
+    0.U -> Cat(0.U(24.W), rxData),
+    1.U -> Cat(0.U(30.W), rxValid.asUInt, txValid.asUInt),
+  ))
+  
   io.mem.rvalid := true.B
   io.mem.wready := true.B
   when(io.mem.wen) {

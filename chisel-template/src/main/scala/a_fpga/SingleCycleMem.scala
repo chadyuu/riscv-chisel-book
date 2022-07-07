@@ -12,12 +12,12 @@ class SingleCycleMem(sizeInBytes: Int) extends Module {
     val write = new MemoryWritePort(sizeInBytes/4, UInt(32.W))
   })
 
-  io.read.address := io.mem.raddr
+  io.read.address := io.mem.raddr >> 2
   io.read.enable := io.mem.ren
   io.mem.rdata := io.read.data
   io.mem.rvalid := RegNext(io.mem.ren, false.B)
 
-  io.write.address := io.mem.waddr
+  io.write.address := io.mem.waddr >> 2
   io.write.enable := io.mem.wen
   io.write.data := io.mem.wdata
   io.mem.wready := true.B
