@@ -1,55 +1,155 @@
-# RISC-VとChiselで学ぶ はじめてのCPU自作 ――オープンソース命令セットによるカスタムCPU実装への第一歩
+[English](README.md) | [日本語](README.ja.md)
+
+# An educational open-source CPU implemented with RISC-V and Chisel
+
+This CPU implementation aims to help you learn the CPU architecture, RISC-V (an open-source instruction set architecture developed at UC Berkeley), and Chisel (a Scala Embedded Language), mainly guided by the publication ["CPU Design with RISC-V and Chisel - First step to custom CPU implementation with open-source ISA."](https://www.amazon.co.jp/dp/4297123053/
+)
 
 ![cover](https://user-images.githubusercontent.com/8579255/130305929-17113e1b-c9e7-4e51-8213-7238a140c01a.jpg)
 
+The publication covers
+- the basics of computer architecture
+- RISC-V implementation with Chisel
+	- Base Integer Instruction Set
+	- CSR
+	- Instruction pipelining
+	- V Vector extension
+	- Custom Instruction (e.g., Population Count)
+	- riscv-tests
 
-本リポジトリは書籍「RISC-VとChiselで学ぶ はじめてのCPU自作 ――オープンソース命令セットによるカスタムCPU実装への第一歩」用です。
+## Getting Started
 
-https://www.amazon.co.jp/dp/4297123053/
+1. Clone this repo.
+	
+	```
+	git clone https://github.com/chadyuu/riscv-chisel-book.git
+	```
 
-> 本書では、UCバークレーで開発されたオープンソースの命令セット(ISA)「RISC-V」を用いて、CPUの作り方を解説します。  
-> コンピュータアーキテクチャ、ハードウェアに関する知識があまりない方にも理解できるように基礎からわかりやすく学んでいきます。  
-> CPUとコンピュータアーキテクチャのしくみを解説したうえで、基本整数命令の実装から、CPUの高速化で活躍するパイプラインの実装、スーパーコンピューターでも活躍するベクトル拡張命令(SIMD)、さらに、汎用CPUでは負荷の高い処理をより高速に実行するためにCPUへ追加可能なカスタム命令の実装までを行います。  
-> CPU設計に用いる基本言語としては、Velilogを抽象化したHDL(ハードウェア記述言語)であるChiselを利用しています。  
-> CPUの自作範囲に関して、手順が煩雑なFPGAでの動作確認は行わず、ソフトウェア上でエミュレーションをゴールとしているので、ソフトウェアエンジニアの方にも取っ付きやすいものとなっています。  
-> 巻末には、昨今RISC-Vが注目されている理由を整理するため、RISC-Vのもたらす価値についてまとめています。
+2. Build the Docker image.
 
-## Docker Hub
+	Recommended to install the Docker image from [Docker Hub](https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book).
 
-執筆時点からの状況の変化によりDockerfileが機能しなくなる可能性があります。
-その場合、著者のDocker Hubから直接イメージをダウンロードしてください。
+	```
+	docker pull yutaronishiyama/riscv-chisel-book
+	```
 
-https://hub.docker.com/repository/docker/yutaronishiyama/riscv-chisel-book
+	Or build the image from Dockerfile.
+	```
+	docker build . -t yutaronishiyama/riscv-chisel-book
+	```
 
-```
-docker pull yutaronishiyama/riscv-chisel-book
-```
+3. Run the image.
 
-## Critical Update
+	```
+	docker run -it -v $PWD/riscv-chisel-book:/src yutaronishiyama/riscv-chisel-book
+	```
 
-### [2022-05-16](https://github.com/chadyuu/riscv-chisel-book/commit/2fff54720a17c86f2e421a455ecaac3e72a294a7)
-dockerfile更新。riscv/riscv-gnu-toolchain.gitのrvv-0.9.xブランチが削除されたため、書籍に掲載したdockerfileではbuildに失敗してしまいます。そのため、forkしたchadyuu/riscv-gnu-toolchain.gitのrvv-0.9.x-for-bookブランチを参照するよう変更しました。
+## Implementation Steps
 
-## FPGA実装版
+1. Set constants
 
-FPGA実装版は [fpgaブランチ](https://github.com/chadyuu/riscv-chisel-book/tree/fpga) にあります。
+	- [Consts.scala](https://github.com/chadyuu/riscv-chisel-book/blob/master/chisel-template/src/main/scala/common/Consts.scala)
+	- [Instructions.scala](https://github.com/chadyuu/riscv-chisel-book/blob/master/chisel-template/src/main/scala/common/Instructions.scala)
 
-## FAQ
+2. [Instruction Fetch](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/01_fetch)
 
-書籍内で説明していなかった部分で、質問をいただいたものについて適宜記載します。
+3. [Instruction Decode](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/02_decode)
 
-### なぜ他のHDLではなくChiselを選んだのですか？
+4. [Load Instruction](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/03_lw)
 
-前提として本書はHDLや論理回路にほとんど触れたことがない人をターゲットにしています。そういった中で初めて触れるHDLとしてChiselは以下の利点があります。
+5. [Store Instruction](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/04_sw)
 
-1. RISC-Vの主力実装がChiselで書かれており、RISC-Vを学ぶ上では切り離せない。
-2. FIRRTLのサイクル精度シミュレータ(Treadle) を内蔵しており、ChiselTestを使ってサクッとサイクル精度シミュレーションを行える。
+6. [Base Instructions & riscv-tests](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/05_riscvtests)
 
-SystemVerilogなどで書く場合、OSSのシミュレータでは言語機能のサポート状況が良くなく、厳しい制限にひっかかります。
-OSSでないFPGAベンダーが提供する比較的高機能なシミュレータを使うことも可能ですが、その場合、本書は各ベンダー向けのFPGA実装を目的としていないため利用規約に抵触する可能性があります。
+	Below are the steps to run riscv-tests.
 
-また、そもそもHDL初学者に合成用記述とシミュレーション用記述を説明する必要がでてくるため、本質的ではない部分で時間を取られてしまいます。
+	1. Update `link.ld`
 
-Chiselにもハードウェアモジュールの記述とChiselTestでの記述の違いはありますが、書き方として明確に分かれているので、SystemVerilogなどのHDLと比べて混乱は少ないと思います。
+	```
+	$ vim /opt/riscv/riscv-tests/env/p/link.ld
+	SECTIONS
+	{
+		. = 0x00000000; // update "0x80000000"
+	}
+	```
 
-こういった理由から、本書では記述言語としてChiselを採用しています。
+	2. Build riscv-tests.
+
+	```
+	cd /opt/riscv/riscv-tests
+	autoconf
+	./configure --prefix=/src/target
+	make
+	make install
+	```
+
+	3. Generate Hex files of riscv-tests.
+
+	```
+	cd /src/chisel-template/src/shell
+	./tohex.sh
+	```
+
+	4. Execute riscv-tests
+
+	```
+	cd /src/chisel-template/src/shell
+	./riscv_tests.sh riscvtests 05_RiscvTests
+	```
+
+7. [Pipelining](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/09_pipeline_datahazard)
+
+	- Control hazards
+	- Data hazards
+
+8. [V Vector extension](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/13_vse)
+
+	- VSETVLI
+	- Vector Load
+	- Vector Add
+	- Vector Store
+
+9. [Custom Instruction "Population Count (pcnt)"](https://github.com/chadyuu/riscv-chisel-book/tree/master/chisel-template/src/main/scala/14_pcnt)
+
+	1. Add "pcnt" to GNU Assembler.
+
+		/opt/riscv/riscv-gnu-toolchain/riscv-binutils/opcodes/riscv-opc.c
+		```
+		#include "opcode/riscv.h"
+		...
+		const struct riscv_opcode riscv_opcodes[] =
+		{
+		...
+		/* name, xlen, isa, operands, match, mask, match_func, pinfo */
+		{"pcnt", 0, INSN_CLASS_I, "d,s", MATCH_PCNT, MASK_PCNT, match_opcode, 0}, // add
+		...
+		}
+		```
+
+	2. Rebuild the assembler.
+
+		```
+		cd /opt/riscv/riscv-gnu-toolchain/build
+		make clean
+		make
+		```
+
+## ChiselTest on C programs
+
+1. Generate a Hex file from C program
+
+	```
+	cd /src/chisel-template/src/c
+	make [filename.c]
+	```
+
+2. ChiselTest on a Hex file
+
+	```
+	cd /src/chisel-template
+	sbt "testOnly [package_name].HexTest"
+	```
+
+## FPGA implementation
+
+Please see [fpga branch](https://github.com/chadyuu/riscv-chisel-book/tree/fpga).
