@@ -35,6 +35,7 @@ dockerfile更新。riscv/riscv-gnu-toolchain.gitのrvv-0.9.xブランチが削�
 ## FPGA実装版
 
 FPGA実装版は [fpgaブランチ](https://github.com/chadyuu/riscv-chisel-book/tree/fpga) にあります。
+セキュリティ・キャンプ2022の資料は[こちら](https://github.com/ciniml/seccamp_2022_riscv_cpu/tree/main/slide)。
 
 ## FAQ
 
