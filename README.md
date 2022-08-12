@@ -152,4 +152,4 @@ The publication covers
 
 ## FPGA implementation
 
-Please see [fpga branch](https://github.com/chadyuu/riscv-chisel-book/tree/fpga).
+Please see [fpga branch](https://github.com/chadyuu/riscv-chisel-book/tree/fpga) and [the documents for the security camp 2022](https://github.com/ciniml/seccamp_2022_riscv_cpu/tree/main/slide).
