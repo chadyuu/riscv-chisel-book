@@ -145,7 +145,7 @@ class Core extends Module {
 
   val wb_data = MuxCase(alu_out, Seq(
     (wb_sel === WB_MEM) -> io.dmem.rdata,
-    (wb_sel === WB_PC) -> pc_plus4
+    (wb_sel === WB_PC) -> pc_plus4 // 追加
   ))
   
   when(rf_wen === REN_S) {
